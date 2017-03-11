@@ -19,7 +19,7 @@ pulp build
 ```
 
 The test suite uses [purescript-spec](https://github.com/owickstrom/purescript-spec)
-and its [automatic spec discover](https://github.com/owickstrom/purescript-spec-discovery).
+and its [automatic spec discovery](https://github.com/owickstrom/purescript-spec-discovery).
 Run the following command to run the test suite:
 
 ```bash
