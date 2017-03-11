@@ -4,24 +4,17 @@ import Prelude
 import Control.Monad.Eff (Eff)
 import Data.Newtype (unwrap)
 import Node.Buffer (Buffer)
-import Node.Crypto (Algorithm, CRYPTO, Secret)
+import Node.Crypto (Algorithm, CRYPTO)
 
 foreign import data Hash :: *
 
-foreign import _createHash 
-  :: forall e
-   . Algorithm 
-  -> String 
-  -> Eff (crypto :: CRYPTO | e) Hash
-
-createHash
+foreign import createHash
   :: forall e
    . Algorithm
-  -> Secret
+  -> String
   -> Eff (crypto :: CRYPTO | e) Hash
-createHash algo = _createHash algo <<< unwrap
 
-foreign import _update 
+foreign import _update
   :: forall e
    . Hash
   -> Buffer
@@ -30,17 +23,11 @@ foreign import _update
 update
   :: forall e
    . Hash
-  -> Buffer 
+  -> Buffer
   -> Eff (crypto :: CRYPTO | e) Unit
 update h = void <<< _update h
 
-foreign import _digest 
+foreign import digest
   :: forall e
    . Hash
    -> Eff (crypto :: CRYPTO | e) Buffer
-
-digest 
-  :: forall e
-   . Hash
-   -> Eff (crypto :: CRYPTO | e) Buffer
-digest = _digest

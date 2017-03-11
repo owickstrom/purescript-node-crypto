@@ -1,11 +1,14 @@
 module Node.Crypto where
 
-import Data.Newtype (class Newtype)
+import Control.Monad.Eff (Eff)
+import Control.Monad.Eff.Random (RANDOM)
+import Node.Buffer (BUFFER, Buffer)
 
 foreign import data CRYPTO :: !
 
 type Algorithm = String
 
-newtype Secret = Secret String
-
-derive instance newtypeSecret :: Newtype Secret _
+foreign import randomBytes
+  :: forall e
+   . Int
+  -> Eff (random :: RANDOM, buffer :: BUFFER | e) Buffer

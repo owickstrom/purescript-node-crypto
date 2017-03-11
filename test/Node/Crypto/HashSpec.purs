@@ -8,7 +8,7 @@ import Control.Monad.Eff.Random (RANDOM)
 import Control.Monad.Eff.Unsafe (unsafePerformEff)
 import Data.Newtype (unwrap)
 import Node.Buffer (Buffer)
-import Node.Crypto (CRYPTO, Secret(Secret))
+import Node.Crypto (CRYPTO)
 import Node.Crypto.TestBuffer (TestBuffer)
 import Node.Encoding (Encoding(..))
 import Test.QuickCheck (Result, (===))
@@ -17,7 +17,7 @@ import Test.Spec.QuickCheck (quickCheck)
 
 digest :: forall e. Buffer -> Eff (crypto :: CRYPTO | e) Buffer
 digest buf = do
-  hash <- Hash.createHash "sha256" (Secret "n0tsup3rz3cr1t")
+  hash <- Hash.createHash "sha256" "n0tsup3rz3cr1t"
   Hash.update hash buf
   Hash.digest hash
 

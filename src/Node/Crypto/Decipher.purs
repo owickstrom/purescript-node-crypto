@@ -5,31 +5,29 @@ module Node.Crypto.Decipher
        , final
        ) where
 
-import Prelude
 import Control.Monad.Eff (Eff)
-import Data.Newtype (unwrap)
 import Node.Buffer (Buffer)
-import Node.Crypto (Algorithm, CRYPTO, Secret)
+import Node.Crypto (Algorithm, CRYPTO)
 
 foreign import data Decipher :: *
 
-foreign import _createDecipher 
+foreign import createDecipher
   :: forall e
    . Algorithm
-  -> String 
+  -> String
   -> Eff (crypto :: CRYPTO | e) Decipher
 
-createDecipher
+foreign import createDecipherIV
   :: forall e
    . Algorithm
-  -> Secret
+  -> String
+  -> Buffer
   -> Eff (crypto :: CRYPTO | e) Decipher
-createDecipher algo = _createDecipher algo <<< unwrap
 
-foreign import update 
+foreign import update
   :: forall e
    . Decipher
-  -> Buffer 
+  -> Buffer
   -> Eff (crypto :: CRYPTO | e) Buffer
 
 foreign import final

@@ -9,7 +9,7 @@ import Control.Monad.Eff.Random (RANDOM)
 import Control.Monad.Eff.Unsafe (unsafePerformEff)
 import Data.Newtype (unwrap)
 import Node.Buffer (BUFFER, Buffer)
-import Node.Crypto (CRYPTO, Secret(Secret), Algorithm)
+import Node.Crypto (CRYPTO, Algorithm)
 import Node.Crypto.TestBuffer (TestBuffer)
 import Node.Encoding (Encoding(..))
 import Test.QuickCheck (Result, (===))
@@ -19,8 +19,8 @@ import Test.Spec.QuickCheck (quickCheck)
 algorithm :: Algorithm
 algorithm = "aes192"
 
-secret :: Secret
-secret = Secret "n0tsup3rz3cr1t"
+secret :: String
+secret = "n0tsup3rz3cr1t"
 
 encrypt :: forall e. Buffer -> Eff (buffer :: BUFFER, crypto :: CRYPTO | e) Buffer
 encrypt buf = do
@@ -38,11 +38,11 @@ decrypt buf = do
 
 roundtrips :: TestBuffer -> Result
 roundtrips buf = unsafePerformEff do
-  inputStr <- Buffer.toString UTF8 (unwrap buf) 
+  inputStr <- Buffer.toString UTF8 (unwrap buf)
   encrypted <- encrypt (unwrap buf)
   decryptedStr <- decrypt encrypted >>= Buffer.toString UTF8
   pure (inputStr === decryptedStr)
-              
+
 spec :: Spec (SpecEffects (random :: RANDOM)) Unit
 spec =
   describe "Node.Crypto.Decipher" do
