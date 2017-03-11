@@ -1,41 +1,34 @@
-module Node.Crypto.Digest.SHA256Spec where
+module Node.Crypto.HashSpec where
 
 import Prelude
 import Node.Buffer as Buffer
 import Node.Crypto.Hash as Hash
+import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Random (RANDOM)
 import Control.Monad.Eff.Unsafe (unsafePerformEff)
-import Data.Newtype (class Newtype, unwrap)
+import Data.Newtype (unwrap)
 import Node.Buffer (Buffer)
-import Node.Crypto (Secret(Secret))
+import Node.Crypto (CRYPTO, Secret(Secret))
+import Node.Crypto.TestBuffer (TestBuffer)
 import Node.Encoding (Encoding(..))
-import Test.QuickCheck (class Arbitrary, arbitrary)
+import Test.QuickCheck (Result, (===))
 import Test.Spec (Spec, SpecEffects, describe, it)
 import Test.Spec.QuickCheck (quickCheck)
 
-newtype TestBuffer = TestBuffer Buffer
-
-derive instance newtypeTestBuffer :: Newtype TestBuffer _
-
-instance arbitraryTestBuffer :: Arbitrary TestBuffer where
-  arbitrary = unsafePerformEff <$> map TestBuffer <$> Buffer.fromString `flip` UTF8 <$> arbitrary
-
-buffersAreEqual :: Buffer -> Buffer -> Boolean
-buffersAreEqual d d' =
-  eq <$> Buffer.toString UTF8 d <*> Buffer.toString UTF8 d'
-  # unsafePerformEff 
-
-testDigest ::  Buffer -> Buffer
-testDigest buf = unsafePerformEff do
+digest :: forall e. Buffer -> Eff (crypto :: CRYPTO | e) Buffer
+digest buf = do
   hash <- Hash.createHash "sha256" (Secret "n0tsup3rz3cr1t")
   Hash.update hash buf
   Hash.digest hash
+
+digestsAreEqual :: TestBuffer -> Result
+digestsAreEqual buf = unsafePerformEff do
+  d1 <- digest (unwrap buf) >>= Buffer.toString UTF8
+  d2 <- digest (unwrap buf) >>= Buffer.toString UTF8
+  pure (d1 === d2)
 
 spec :: Spec (SpecEffects (random :: RANDOM)) Unit
 spec =
   describe "Node.Crypto.Hash" do
     it "gives the same result twice" $
-      quickCheck \(buf :: TestBuffer) -> 
-        buffersAreEqual
-          (testDigest (unwrap buf))
-          (testDigest (unwrap buf))
+      quickCheck digestsAreEqual
