@@ -17,7 +17,7 @@ import Test.Spec.QuickCheck (quickCheck)
 
 digest :: forall e. Buffer -> Eff (crypto :: CRYPTO | e) Buffer
 digest buf = do
-  hash <- Hash.createHash "sha256" "n0tsup3rz3cr1t"
+  hash <- Hash.createHash "sha256"
   Hash.update hash buf
   Hash.digest hash
 
