@@ -8,4 +8,4 @@ import Test.Spec.Reporter.Console (consoleReporter)
 import Test.Spec.Runner (RunnerEffects, run)
 
 main :: Eff (RunnerEffects (fs :: FS)) Unit
-main = discover "Node\\.Crypto\\..*Spec" >>= run [consoleReporter]
+main = discover "Node\\.Crypto.*Spec" >>= run [consoleReporter]
