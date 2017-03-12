@@ -1,8 +1,14 @@
 # purescript-node-crypto
 
 This library wraps the [Crypto](https://nodejs.org/api/crypto.html) library
-in NodeJS in a PureScript API. The current implementation is very young and
-experimental.
+in NodeJS in a PureScript API.
+
+## Status
+
+The current implementation is experimental and lacks bindings for many of the
+functions in the Crypto library. I have just implemented the ones that I have
+needed so far. If you want to add more bindings, please submit an issue and
+then we can discuss a pull request.
 
 ## Build & Test
 
@@ -36,5 +42,5 @@ reference. I might, however, add some examples and documentation here later.
 
 ## Contributing
 
-Use the GitHub Issues tracker to post bug reports. Pull request are welcome,
-but please discuss the changes before sending larger patches.
+Use the GitHub Issues tracker to post bug reports and problems. Pull request
+are welcome, but please discuss the changes before sending larger patches.
