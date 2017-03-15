@@ -7,7 +7,6 @@ module Node.Crypto
 
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (Error)
-import Control.Monad.Eff.Random (RANDOM)
 import Data.Either (Either(..))
 import Node.Buffer (BUFFER, Buffer)
 
@@ -22,7 +21,7 @@ type Algorithm = String
 foreign import randomBytes
   :: forall e
    . Int
-  -> Eff (random :: RANDOM, buffer :: BUFFER | e) Buffer
+  -> Eff (buffer :: BUFFER | e) Buffer
 
 foreign import _timingSafeEqual
   :: (Error -> Either Error Boolean)
